@@ -1,0 +1,51 @@
+function q u e s ti o n4
+
+load shoewsducks.mat;
+n = size(X,1);
+idxtrain = randsample(n, n/2);
+%Split dataset
+idxtest = setdiff(1:n, idxtrain);
+trnX = X(idxtrain, : );
+tstX = X(idxtest, : );
+trnY = Y(idxtrain, : );
+tstY = Y(idxtest, : );
+
+%Classify using polynomials
+d_max = 10;
+err_d = zeros(1, d_max);
+global p1;
+
+for d=1:d_max
+    p1 = d;
+    % Training
+    [nsv, alpha, bias] = svc(trnX, trnY, 'poly', inf);
+    %Predict
+    predictedY = svcoutput(trnX, trnY, tstX, 'poly' ,alpha ,bias);
+    %Compute test error
+    err_d(d) = svcerror(trnX ,trnY ,tstX ,tstY ,'poly', alpha ,bias);
+end
+% p l o t e r r o r v s p oly n om i al d e g r e e
+f = figure(1);
+clf(f);
+plot(1:d_max ,err_d);
+print (f , 'depsc', 'poly.eps');
+
+% c l a s s i f y u s i n g r b f s
+sigma s = . 1 : . 1 : 2 ;
+e r r si gm a = zeros ( 1 , numel ( sigma s ) ) ;
+for si gm a i =1: numel ( sigma s )
+p1 = sigma s ( si gm a i ) ;
+% t r a i n
+[ nsv , alpha , bi a s ] = s vc ( trnX , trnY , ? r bf ? , i n f ) ;
+% p r e d i c t
+p redic tedY = s vcou tpu t ( trnX , trnY , tstX , ? r bf ? , alpha , bi a s ) ;
+% compute t e s t e r r o r
+e r r si gm a ( si gm a i ) = s v c e r r o r ( trnX , trnY , tstX , tstY , ? r bf ? , alpha , bi a s ) ;
+end
+% p l o t e r r o r v s p oly n om i al d e g r e e
+f = f igure ( 1 ) ;
+c l f ( f ) ;
+p lot ( sigmas , e r r si gm a ) ;
+pr int ( f , ??dep sc ? , ? r bf . ep s ? ) ;
+
+
